@@ -1,0 +1,233 @@
+<mxfile host="Electron" modified="2024-04-29T15:44:10.299Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.2.5 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="Oshh8Hq7_lnY8KOyiDS8" version="24.2.5" type="device">
+  <diagram name="Page-1" id="O0Amy0HeCZU3TYw8ukFA">
+    <mxGraphModel dx="1500" dy="887" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-5" value="Test Manager Service" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;align=right;labelPosition=left;verticalLabelPosition=top;verticalAlign=bottom;spacingRight=-120;" vertex="1" parent="1">
+          <mxGeometry x="230" y="410" width="530" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Oz0ZLTZB0RZmnJxeU0BO-1" target="Oz0ZLTZB0RZmnJxeU0BO-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-1" value="Test Manager UI" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="250" y="230" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Oz0ZLTZB0RZmnJxeU0BO-2" target="Oz0ZLTZB0RZmnJxeU0BO-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-2" value="Test Manager Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="440" y="300" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Oz0ZLTZB0RZmnJxeU0BO-3" target="Oz0ZLTZB0RZmnJxeU0BO-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-3" value="Test Manager API" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="440" y="430" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Oz0ZLTZB0RZmnJxeU0BO-4" target="Oz0ZLTZB0RZmnJxeU0BO-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Oz0ZLTZB0RZmnJxeU0BO-4" target="Oz0ZLTZB0RZmnJxeU0BO-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="Oz0ZLTZB0RZmnJxeU0BO-4" target="Oz0ZLTZB0RZmnJxeU0BO-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-4" value="Test Manager Core" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="440" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-6" value="Test Manager Database" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="622.5" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-7" value="Test Scheduler" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="280" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-8" value="Test Runner Client" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="440" y="610" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-15" value="Test Node" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;align=right;labelPosition=left;verticalLabelPosition=top;verticalAlign=bottom;spacingRight=-120;" vertex="1" parent="1">
+          <mxGeometry x="232.5" y="780" width="165" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-16" value="Test Runner Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="255" y="790" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-17" value="Test Runner Wrapper" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="255" y="860" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-18" value="Test Env Container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="255" y="930" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-21" value="Test Runner" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;align=right;labelPosition=left;verticalLabelPosition=top;verticalAlign=bottom;spacingRight=-120;" vertex="1" parent="1">
+          <mxGeometry x="420" y="780" width="165" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-22" value="Test Runner Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="442.5" y="790" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-23" value="Test Runner Wrapper" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="442.5" y="860" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-24" value="Test Env Container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="442.5" y="930" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-26" value="Test Runner" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;align=right;labelPosition=left;verticalLabelPosition=top;verticalAlign=bottom;spacingRight=-120;" vertex="1" parent="1">
+          <mxGeometry x="600" y="780" width="165" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-27" value="Test Runner Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="622.5" y="790" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-28" value="Test Runner Wrapper" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="622.5" y="860" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-29" value="Test Env Container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="622.5" y="930" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-35" value="" style="endArrow=none;html=1;rounded=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" target="Oz0ZLTZB0RZmnJxeU0BO-8">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="720" as="sourcePoint" />
+            <mxPoint x="540" y="700" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-36" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="720" as="sourcePoint" />
+            <mxPoint x="680" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-37" value="" style="endArrow=none;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="720" as="sourcePoint" />
+            <mxPoint x="320" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-38" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="320" y="720" as="sourcePoint" />
+            <mxPoint x="320" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-39" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="720" as="sourcePoint" />
+            <mxPoint x="500" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-40" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="680" y="721" as="sourcePoint" />
+            <mxPoint x="680" y="761" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-41" value="Test Suite CI&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;align=right;labelPosition=left;verticalLabelPosition=top;verticalAlign=bottom;spacingRight=-120;" vertex="1" parent="1">
+          <mxGeometry x="650" y="60" width="200" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-43" value="Test Environment Dockerfile" style="shape=note;size=20;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="715" y="90" width="70" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-45" value="Test Env Container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="690" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-46" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="750" y="190" as="sourcePoint" />
+            <mxPoint x="749.5" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-47" value="" style="curved=1;endArrow=classic;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;fillColor=#f8cecc;strokeColor=#b85450;" edge="1" parent="1" source="Oz0ZLTZB0RZmnJxeU0BO-45">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1030" y="260" as="sourcePoint" />
+            <mxPoint x="570" y="320" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="650" y="280" />
+              <mxPoint x="610" y="290" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-50" value="1. Test Suite CI Builds Environment Container" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;fontStyle=0" vertex="1" parent="1">
+          <mxGeometry x="830" y="130" width="130" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-52" value="2. Environment Container gets published to Test Manager Database" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="550" y="170" width="122.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-53" value="3. Test Suite CI publishes test configuration to test manager database" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="727.5" y="320" width="122.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-55" value="4. Test Suite CI initiates test run for published config" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="585" y="425" width="122.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-56" value="5. Test scheduler creates tests from test config" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="275" y="600" width="122.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-57" value="6. Test manager pushes test environment container to runner node(s)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="605" y="605" width="122.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-59" value="Test Manager Database" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;align=right;labelPosition=left;verticalLabelPosition=top;verticalAlign=bottom;spacingRight=-120;" vertex="1" parent="1">
+          <mxGeometry x="785" y="410" width="175" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-60" value="Test Environment Image Registry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="810" y="440" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-61" value="Test Config Registry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="810" y="520" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-63" value="Test Result Registry" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="812.5" y="600" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-67" value="6. Test manager pushes test environment container to runner node(s)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="785" y="740" width="122.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-68" value="7. Test runner wrapper executes test container" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="790" y="855" width="122.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-69" value="8. Test manager pushes commands test runner to execute test in test container" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="785" y="960" width="122.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-71" value="9. Test wrapper reports results to test manager, and saves result to database" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="785" y="1050" width="122.5" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-72" value="Test node could be a generic ubuntu iamge with test runner agent preisntalled so would require minimal configuration" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="90" y="790" width="120" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-73" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;align=right;labelPosition=left;verticalLabelPosition=top;verticalAlign=bottom;spacingRight=-120;" vertex="1" parent="1">
+          <mxGeometry x="232.5" y="1020" width="165" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-74" value="JTAG" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="255" y="1020" width="50" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-76" value="Serial" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="320" y="1020" width="50" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-78" value="DUT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="255" y="1060" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-80" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;align=right;labelPosition=left;verticalLabelPosition=top;verticalAlign=bottom;spacingRight=-120;" vertex="1" parent="1">
+          <mxGeometry x="420" y="1020" width="165" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-81" value="JTAG" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="442.5" y="1020" width="50" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-82" value="Serial" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="507.5" y="1020" width="50" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-83" value="DUT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="442.5" y="1060" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-84" value="" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=none;align=right;labelPosition=left;verticalLabelPosition=top;verticalAlign=bottom;spacingRight=-120;" vertex="1" parent="1">
+          <mxGeometry x="600" y="1020" width="165" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-85" value="JTAG" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="622.5" y="1020" width="50" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-86" value="Serial" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="687.5" y="1020" width="50" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-87" value="DUT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="622.5" y="1060" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Oz0ZLTZB0RZmnJxeU0BO-89" value="10. User views live results in test UI" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#f5f5f5;strokeColor=none;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="88.75" y="200" width="122.5" height="70" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
