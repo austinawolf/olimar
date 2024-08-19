@@ -60,7 +60,7 @@ delete_job_if_exists(batch_api, job_name, namespace)
 # Define the container with the command that runs the job
 container = client.V1Container(
     name="my-container",
-    image="ubuntu:22.04",
+    image="localhost:5000/example-env:latest",  # Use the Docker image from the specified registry
     command=["/bin/bash", "-c"],
     args=["echo Hello, Kubernetesa asdfasdf! && sleep 5 && echo Job complete!"],  # Command that will run in the job
 )

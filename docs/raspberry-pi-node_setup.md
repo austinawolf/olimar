@@ -41,3 +41,8 @@ Example: `K10405b449ebbde21b43467bd84d9922c25b617f7e4e0e484a91708e0d8e222b3cf::s
 #### Test Pull
 * docker pull 192.168.0.250:5000/example-env
 
+## Setup kubectl Client
+* On master via ssh, run `cat /etc/rancher/k3s/k3s.yaml`
+* Copy output to ` C:\Users\awolf\.kube\config`
+* Update "localhost" in config to master node
+* Test `kubectl get nodes`
