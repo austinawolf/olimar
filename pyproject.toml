@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "olimar"
+version = "0.0.0"
+requires-python = ">=3.9"
+authors = [{name="Austin Wolf", email="austinawolf@gmail.com"}]
+readme = "README.md"
+dependencies = [
+    "docker",
+    "junitparser",
+    "kubernetes",
+    "pydantic",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.2.1",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = false
+
+#[project.scripts]
+#fwutil = "fwutil.cli.cli_main:cli_main"
+
+#[tool.setuptools]
+#package-data = { "fwutil" = ["resources/*"] }

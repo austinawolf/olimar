@@ -58,7 +58,7 @@ container = client.V1Container(
     # image="ubuntu:22.04",
     image="192.168.0.250:5000/example-env:latest",  # Use the Docker image from the specified registry
     command=["/bin/bash", "-c"],
-    args=["echo Test123"],
+    args=["pytest"],
 )
 
 # Define the pod template with node selector

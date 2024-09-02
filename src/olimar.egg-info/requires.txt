@@ -1,5 +1,6 @@
-grpcio
-grpcio-tools
 docker
 junitparser
 kubernetes
+
+[dev]
+build>=1.2.1
