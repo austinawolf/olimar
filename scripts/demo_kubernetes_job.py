@@ -5,32 +5,29 @@ import time
 # Load the kubeconfig file
 config.load_kube_config()
 
-# Define the job name and namespace
+# Define the job name, namespace, and the node where the job should run
 job_name = "my-job"
 namespace = "default"
+node_name = "olimar-node"  # Specify the name of the node
 
 # Create an instance of the BatchV1Api and CoreV1Api
 batch_api = client.BatchV1Api()
 core_api = client.CoreV1Api()
-
 
 def delete_job_if_exists(batch_api, job_name, namespace):
     try:
         # Check if the job exists
         batch_api.read_namespaced_job(name=job_name, namespace=namespace)
         print(f"Job '{job_name}' found. Deleting it...")
-
         # If found, delete the job and its pods
         batch_api.delete_namespaced_job(
             name=job_name,
             namespace=namespace,
-            body=client.V1DeleteOptions(propagation_policy='Foreground'),  # Delete the job and its associated pods
+            body=client.V1DeleteOptions(propagation_policy='Foreground'),
         )
-
         print(f"Job '{job_name}' deletion initiated. Waiting for it to be fully deleted...")
         # Wait until the job is fully deleted
         wait_for_job_deletion(batch_api, job_name, namespace)
-
     except ApiException as e:
         if e.status == 404:
             print(f"Job '{job_name}' not found. Proceeding with creation.")
@@ -38,13 +35,12 @@ def delete_job_if_exists(batch_api, job_name, namespace):
             print(f"Exception when checking or deleting job: {e}")
             raise
 
-
 def wait_for_job_deletion(batch_api, job_name, namespace):
     while True:
         try:
             batch_api.read_namespaced_job(name=job_name, namespace=namespace)
             print(f"Job '{job_name}' is still being deleted...")
-            time.sleep(2)  # Wait for 2 seconds before checking again
+            time.sleep(2)
         except ApiException as e:
             if e.status == 404:
                 print(f"Job '{job_name}' has been fully deleted.")
@@ -53,31 +49,32 @@ def wait_for_job_deletion(batch_api, job_name, namespace):
                 print(f"Exception when checking job status: {e}")
                 raise
 
-
 # Delete the job if it exists
 delete_job_if_exists(batch_api, job_name, namespace)
 
 # Define the container with the command that runs the job
 container = client.V1Container(
     name="my-container",
-    image="localhost:5000/example-env:latest",  # Use the Docker image from the specified registry
+    # image="ubuntu:22.04",
+    image="192.168.0.250:5000/example-env:arm64",  # Use the Docker image from the specified registry
     command=["/bin/bash", "-c"],
-    args=["echo Hello, Kubernetesa asdfasdf! && sleep 5 && echo Job complete!"],  # Command that will run in the job
+    args=["echo Test123"],
 )
 
-# Define the pod template
+# Define the pod template with node selector
 template = client.V1PodTemplateSpec(
     metadata=client.V1ObjectMeta(labels={"job-name": job_name}),
     spec=client.V1PodSpec(
         containers=[container],
-        restart_policy="Never"  # Ensure the job does not restart
+        restart_policy="Never",
+        node_selector={"kubernetes.io/hostname": node_name}  # This assigns the pod to a specific node
     )
 )
 
 # Define the job spec
 job_spec = client.V1JobSpec(
     template=template,
-    backoff_limit=4  # Retry up to 4 times if the job fails
+    backoff_limit=4
 )
 
 # Define the job
@@ -93,9 +90,7 @@ batch_api.create_namespaced_job(
     namespace=namespace,
     body=job
 )
-
 print("Job created successfully.")
-
 
 # Function to wait for the job to complete and get the result
 def wait_for_job_completion(batch_api, job_name, namespace):
@@ -111,24 +106,20 @@ def wait_for_job_completion(batch_api, job_name, namespace):
         except ApiException as e:
             print(f"Exception when checking job status: {e}")
             raise
-        time.sleep(5)  # Wait for 5 seconds before checking the status again
-
+        time.sleep(5)
 
 # Wait for the job to complete
 wait_for_job_completion(batch_api, job_name, namespace)
-
 
 # Get the logs from the job's pod
 def get_job_logs(core_api, job_name, namespace):
     # Get the pod name associated with the job
     pod_list = core_api.list_namespaced_pod(namespace, label_selector=f"job-name={job_name}")
     pod_name = pod_list.items[0].metadata.name
-
     # Retrieve the logs from the pod
     logs = core_api.read_namespaced_pod_log(pod_name, namespace)
     print("Job Logs:")
     print(logs)
-
 
 # Retrieve and print the job logs
 get_job_logs(core_api, job_name, namespace)

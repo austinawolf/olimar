@@ -31,12 +31,21 @@ Example: `K10405b449ebbde21b43467bd84d9922c25b617f7e4e0e484a91708e0d8e222b3cf::s
 
 #### Pushing Example Image to Master Registry
 * 
-* docker tag example-env 192.168.0.250:5000/example-env
-* docker push 192.168.0.250:5000/example-env
+* docker tag example-env:arm64 192.168.0.250:5000/example-env:arm64
+* docker push 192.168.0.250:5000/example-env:arm64
 
 ## Node Setup (via ssh)
-* Need just the first section before the "::"
 * `curl -sfL https://get.k3s.io | K3S_URL=https://192.168.0.250:6443 K3S_TOKEN=K10405b449ebbde21b43467bd84d9922c25b617f7e4e0e484a91708e0d8e222b3cf::server:55188d3c18a9f5ddd28d869c6b8b0a65 sh -`
+
+#### Allow insecure registries
+* Add file: `/etc/rancher/k3s/registries.yaml`
+```yaml
+mirrors:
+  "192.168.0.250:5000":
+    endpoint:
+      - "http://192.168.0.250:5000"
+```
+
 
 #### Test Pull
 * docker pull 192.168.0.250:5000/example-env
@@ -46,3 +55,10 @@ Example: `K10405b449ebbde21b43467bd84d9922c25b617f7e4e0e484a91708e0d8e222b3cf::s
 * Copy output to ` C:\Users\awolf\.kube\config`
 * Update "localhost" in config to master node
 * Test `kubectl get nodes`
+
+#### Other Commands
+```bash
+curl http://192.168.0.250:5000/v2/example-env/tags/list
+
+
+```
