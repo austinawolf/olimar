@@ -56,7 +56,7 @@ delete_job_if_exists(batch_api, job_name, namespace)
 container = client.V1Container(
     name="my-container",
     # image="ubuntu:22.04",
-    image="192.168.0.250:5000/example-env:arm64",  # Use the Docker image from the specified registry
+    image="192.168.0.250:5000/example-env:latest",  # Use the Docker image from the specified registry
     command=["/bin/bash", "-c"],
     args=["echo Test123"],
 )
