@@ -1,8 +1,8 @@
 import time
 from olimar.image.image import Image
+from olimar.job.job_config import JobConfig
 from olimar.job.job_manager import JobManager
 from olimar.job.job_result import JobResult
-from olimar.test.pytest_test import PyTestTest
 
 
 def main():
@@ -10,14 +10,13 @@ def main():
     test_image = Image('192.168.0.250:5000', 'example-env', 'latest')
     test_image2 = Image('localhost:5000', 'example-env', 'latest')
 
-    test1 = PyTestTest('test_calculator')
-    test2 = PyTestTest('test_slow_calculator')
+    job_config1 = JobConfig('echo 123')
 
     manager = JobManager(master)
-    waitable1 = manager.start_job('olimar-node', test_image, test1.to_job_config())
+    waitable1 = manager.start_job('olimar-node', test_image, job_config1)
 
     time.sleep(1)
-    waitable2 = manager.start_job('raspberrypi2', test_image2, test2.to_job_config())
+    waitable2 = manager.start_job('raspberrypi2', test_image2, job_config1)
 
     result1: JobResult = waitable1.wait(20)
     print(result1.logs)
