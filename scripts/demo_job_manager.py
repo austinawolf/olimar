@@ -1,6 +1,5 @@
 import time
-from olimar.job.image import Image
-from olimar.job.job_config import JobConfig
+from olimar.image.image import Image
 from olimar.job.job_manager import JobManager
 from olimar.job.job_result import JobResult
 from olimar.test.pytest_test import PyTestTest

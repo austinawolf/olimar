@@ -5,9 +5,9 @@ from collections import deque
 from datetime import datetime
 
 from kubernetes import client, config
-from kubernetes.client.rest import ApiException
+from kubernetes.stream import stream
 
-from olimar.job.image import Image
+from olimar.image.image import Image
 from olimar.job.job_config import JobConfig
 from olimar.job.job_result import JobResult
 from olimar.util.waitable import Waitable
@@ -53,7 +53,6 @@ class JobManager(threading.Thread):
                     job.notify(result)
                 else:
                     print(f'{job.name} state unknown')
-
             time.sleep(1)
 
     def get_logs(self, job_name):
@@ -72,6 +71,12 @@ class JobManager(threading.Thread):
             image=image.to_link(),
             command=job_config.get_command(),
             args=job_config.get_args(),
+            volume_mounts=[
+                client.V1VolumeMount(
+                    name="my-volume",
+                    mount_path="/data"
+                )
+            ]
         )
 
         template = client.V1PodTemplateSpec(
@@ -79,7 +84,16 @@ class JobManager(threading.Thread):
             spec=client.V1PodSpec(
                 containers=[container],
                 restart_policy="Never",
-                node_selector={"kubernetes.io/hostname": node_name}  # This assigns the pod to a specific node
+                node_selector={"kubernetes.io/hostname": node_name},  # This assigns the pod to a specific node
+                volumes=[
+                    client.V1Volume(
+                        name="my-volume",
+                        host_path=client.V1HostPathVolumeSource(
+                            path='/mnt/data',
+                            type='DirectoryOrCreate'
+                        ),
+                    )
+                ],
             )
         )
 
@@ -102,5 +116,26 @@ class JobManager(threading.Thread):
         )
 
         waitable = JobWaitable(job_name)
+
         self._active_jobs.append(waitable)
         return waitable
+
+    def _get_pod_name_by_job(self, job_name: str) -> str:
+        pods = self.CORE_API.list_namespaced_pod(
+            namespace=self.NAMESPACE,
+            label_selector=f"job-name={job_name}"
+        ).items
+        return pods[0].metadata.name if pods else None
+
+    def _extract_file_from_pod(self, pod_name: str, src_path: str, dest_path: str):
+        exec_command = ['tar', 'cf', '-', src_path]
+        resp = stream(self.CORE_API.connect_get_namespaced_pod_exec,
+                      pod_name,
+                      self.NAMESPACE,
+                      container='my-container',
+                      command=exec_command,
+                      stderr=True, stdin=False,
+                      stdout=True, tty=False)
+
+        with open(dest_path, 'wb') as f:
+            f.write(resp)
