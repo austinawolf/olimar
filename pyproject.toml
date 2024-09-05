@@ -13,6 +13,8 @@ dependencies = [
     "junitparser",
     "kubernetes",
     "pydantic",
+    "paramiko",
+    "scp"
 ]
 
 [project.optional-dependencies]

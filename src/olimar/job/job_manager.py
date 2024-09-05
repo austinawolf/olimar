@@ -1,3 +1,4 @@
+import uuid
 import queue
 import threading
 import time
@@ -7,9 +8,11 @@ from datetime import datetime
 from kubernetes import client, config
 from kubernetes.stream import stream
 
+from olimar.file_transfer.file_transfer import FileTransfer
 from olimar.image.image import Image
 from olimar.job.job_config import JobConfig
 from olimar.job.job_result import JobResult
+from olimar.node.node import Node
 from olimar.util.waitable import Waitable
 
 # Load the kubeconfig file
@@ -17,9 +20,17 @@ config.load_kube_config()
 
 
 class JobWaitable(Waitable):
-    def __init__(self, name):
-        super().__init__()
+    pass
+
+
+class Job:
+    def __init__(self, name, waitable, job_config: JobConfig, image, node: Node):
         self.name = name
+        self.waitable = waitable
+        self.config = job_config
+        self.image = image
+        self.node = node
+        self.is_complete = False
 
 
 class JobManager(threading.Thread):
@@ -33,26 +44,30 @@ class JobManager(threading.Thread):
         self._active_jobs = deque()
         self._complete_jobs = queue.Queue(maxsize=50)
         self.daemon = True
-        self.start()
+        # self.start()
 
     def run(self):
         while True:
             for job in list(self._active_jobs):
-                job: JobWaitable = job
-                job_status = self.BATCH_API.read_namespaced_job_status(job.name, self.NAMESPACE)
-                if job_status.status.active:
-                    print(f'{job.name} is active')
-                elif job_status.status.failed:
-                    print(f'{job.name} failed')
+                job: Job = job
+                if job.is_complete:
                     self._active_jobs.remove(job)
-                elif job_status.status.succeeded:
-                    self._active_jobs.remove(job)
-                    print(f'{job.name} succeeded')
-                    logs = self.get_logs(job.name)
-                    result = JobResult(job.name, logs)
-                    job.notify(result)
-                else:
-                    print(f'{job.name} state unknown')
+                    print(f'{job.name} complete')
+                    result = JobResult(job.name, "")
+
+                # job_status = self.BATCH_API.read_namespaced_job_status(job.name, self.NAMESPACE)
+                # if job_status.status.active:
+                #     print(f'{job.name} is active')
+                # elif job_status.status.failed:
+                #     print(f'{job.name} failed')
+                #     self._active_jobs.remove(job)
+                # elif job_status.status.succeeded:
+                #     self._active_jobs.remove(job)
+                #     print(f'{job.name} succeeded')
+                #     logs = self.get_logs(job.name)
+                #     job.notify(result)
+                # else:
+                #     print(f'{job.name} state unknown')
             time.sleep(1)
 
     def get_logs(self, job_name):
@@ -62,34 +77,34 @@ class JobManager(threading.Thread):
         logs = self.CORE_API.read_namespaced_pod_log(pod_name, self.NAMESPACE)
         return logs
 
-    def start_job(self, node_name: str, image: Image, job_config: JobConfig):
-        datetime_str = datetime.now().strftime('%Y%m%d-%H%M%S')
-        job_name = f"job-{datetime_str}"
+    def _run_job(self, job: Job):
+        job_name = f"job-{str(uuid.uuid4())[:6]}"
 
         container = client.V1Container(
             name="my-container",
-            image=image.to_link(),
-            command=job_config.get_command(),
-            args=job_config.get_args(),
+            image=job.image.to_link(),
+            command=['sleep', 'infinity'],
+            args=[],
             volume_mounts=[
                 client.V1VolumeMount(
                     name="my-volume",
-                    mount_path="/data"
+                    mount_path="/artifacts"
                 )
             ]
         )
 
+        host_artifact_mount = '/mnt/artifacts'
         template = client.V1PodTemplateSpec(
             metadata=client.V1ObjectMeta(labels={"job-name": job_name}),
             spec=client.V1PodSpec(
                 containers=[container],
                 restart_policy="Never",
-                node_selector={"kubernetes.io/hostname": node_name},  # This assigns the pod to a specific node
+                node_selector={"kubernetes.io/hostname": job.node.name},  # This assigns the pod to a specific node
                 volumes=[
                     client.V1Volume(
                         name="my-volume",
                         host_path=client.V1HostPathVolumeSource(
-                            path='/mnt/data',
+                            path=host_artifact_mount,
                             type='DirectoryOrCreate'
                         ),
                     )
@@ -103,7 +118,7 @@ class JobManager(threading.Thread):
         )
 
         # Define the job
-        job = client.V1Job(
+        kubernetes_job = client.V1Job(
             api_version="batch/v1",
             kind="Job",
             metadata=client.V1ObjectMeta(name=job_name),
@@ -112,12 +127,66 @@ class JobManager(threading.Thread):
 
         self.BATCH_API.create_namespaced_job(
             namespace=self.NAMESPACE,
-            body=job
+            body=kubernetes_job
         )
 
-        waitable = JobWaitable(job_name)
+        pod_name = self._get_pod_name_by_job(job_name)
 
-        self._active_jobs.append(waitable)
+        time.sleep(6)
+
+        # Execute each command sequentially
+        logs = []
+        for command in job.config.commands:
+            exec_command = ['sh', '-c', command]
+            print(f"Executing command: {command}")
+            resp = stream(
+                self.CORE_API.connect_get_namespaced_pod_exec,
+                pod_name,
+                self.NAMESPACE,
+                container='my-container',
+                command=exec_command,
+                stderr=True,
+                stdin=False,
+                stdout=True,
+                tty=False
+            )
+            print(f"Output: {resp}")
+            logs.append(resp)
+            time.sleep(1)
+
+        # Delete the job and associated resources
+        print(f"Deleting job: {job_name}")
+        self.BATCH_API.delete_namespaced_job(
+            name=job_name,
+            namespace=self.NAMESPACE,
+            body=client.V1DeleteOptions(
+                propagation_policy='Foreground'  # Ensures all pods and resources are cleaned up
+            )
+        )
+        job.is_complete = True
+
+        artifacts = []
+        file_transfer = FileTransfer(job.node.ip_address, 'awolf', 'awolf')
+        for path in job.config.artifacts:
+            print(f"Retrieving: {path}")
+            buffer = file_transfer.get(path)
+            artifacts.append(buffer)
+
+        job_result = JobResult(job_name, logs, artifacts)
+
+        job.waitable.notify(job_result)
+
+        return
+
+    def start_job(self, node: Node, image: Image, job_config: JobConfig):
+        job_name = f"job-{str(uuid.uuid4())[:6]}"
+        waitable = JobWaitable()
+
+        job = Job(job_name, waitable, job_config, image, node)
+
+        thread = threading.Thread(target=self._run_job, args=(job,))
+        self._active_jobs.append(job)
+        thread.start()
         return waitable
 
     def _get_pod_name_by_job(self, job_name: str) -> str:
