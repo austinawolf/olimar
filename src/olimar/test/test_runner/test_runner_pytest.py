@@ -5,7 +5,6 @@ from olimar.node.node import Node
 from olimar.test.test_result import TestResult, TestStatus, TestRunResult
 from olimar.test.test_run_config import TestRunConfig
 from olimar.test.test_runner import TestRunnerBase
-from olimar.util.junit_parser import JunitTestResults
 
 
 class PyTestTestRunner(TestRunnerBase):
