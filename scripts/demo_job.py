@@ -1,5 +1,5 @@
-import time
 from olimar.image.image import Image
+from olimar.job.job_command import JobStep
 from olimar.job.job_config import JobConfig
 from olimar.job.job_manager import JobManager
 from olimar.job.job_result import JobResult
@@ -11,26 +11,27 @@ def main():
     node = Node('olimar-node', "192.168.0.173")
     test_image = Image('192.168.0.250:5000', 'example-env', 'latest')
 
-    commands = [
-        'echo 123',
-        'touch file123.txt',
-        'echo 123456789 > file123.txt',
-        'cp file123.txt /artifacts',
-        'ls /artifacts',
+    steps = [
+        JobStep('echo 123'),
+        JobStep('touch file123.txt'),
+        JobStep('echo 123456789 > file123.txt'),
+        JobStep('cp file123.txt /artifacts'),
+        JobStep('ls /artifacts'),
     ]
 
-    artifacts = [
-        '/mnt/artifacts/file123.txt',
-    ]
+    # artifacts = [
+    #     '/mnt/artifacts/file123.txt',
+    # ]
 
-    job_config1 = JobConfig(commands, artifacts)
+    job_config = JobConfig(steps)
 
     manager = JobManager(master)
-    waitable1 = manager.start_job(node, test_image, job_config1)
+    waitable = manager.start_job(node, test_image, job_config)
 
-    result1: JobResult = waitable1.wait(60)
-    print(result1.logs)
-    print(result1.artifacts[0].read().decode())
+    result: JobResult = waitable.wait(60)
+
+    for step in result.steps:
+        print(f'Command: {step.command}, Results: {step.response}')
 
 
 main()

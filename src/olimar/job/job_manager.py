@@ -132,26 +132,26 @@ class JobManager(threading.Thread):
 
         pod_name = self._get_pod_name_by_job(job_name)
 
-        time.sleep(6)
+        time.sleep(3)
 
         # Execute each command sequentially
         logs = []
-        for command in job.config.commands:
-            exec_command = ['sh', '-c', command]
-            print(f"Executing command: {command}")
+        for step in job.config.steps:
+            command = ['sh', '-c', step.command]
+            print(f"Executing command: {command}, Pod Name: {pod_name}")
             resp = stream(
                 self.CORE_API.connect_get_namespaced_pod_exec,
                 pod_name,
                 self.NAMESPACE,
                 container='my-container',
-                command=exec_command,
+                command=command,
                 stderr=True,
                 stdin=False,
                 stdout=True,
                 tty=False
             )
-            print(f"Output: {resp}")
-            logs.append(resp)
+            step.response = resp
+            step.is_complete = True
             time.sleep(1)
 
         # Delete the job and associated resources
@@ -165,15 +165,15 @@ class JobManager(threading.Thread):
         )
         job.is_complete = True
 
-        artifacts = []
-        file_transfer = FileTransfer(job.node.ip_address, 'awolf', 'awolf')
-        for path in job.config.artifacts:
-            print(f"Retrieving: {path}")
-            buffer = file_transfer.get(path)
-            artifacts.append(buffer)
+        # artifacts = []
+        # file_transfer = FileTransfer(job.node.ip_address, 'awolf', 'awolf')
+        # for path in job.config.artifacts:
+        #     print(f"Retrieving: {path}")
+        #     buffer = file_transfer.get(path)
+        #     artifacts.append(buffer)
+        #
 
-        job_result = JobResult(job_name, logs, artifacts)
-
+        job_result = JobResult(job_name, job.config.steps, [])
         job.waitable.notify(job_result)
 
         return
