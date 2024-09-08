@@ -2,7 +2,8 @@
 
 * Master Node: raspberrypi2, 192.168.0.250
 * Worker Node: olimar-node, 192.168.0.173
-
+* Worker Node: olimar-node2, 192.168.0.230
+K10f521865267d2999d350b53d342c257340b3c93752ed60164f2741957e0316897::server:fc7821945d3ef3af2662afe132e556eb
 
 ## Raspberry Pi Setup
 
@@ -45,6 +46,15 @@ mirrors:
     endpoint:
       - "http://192.168.0.250:5000"
 ```
+
+sudo mkdir -p /etc/rancher/k3s/
+sudo bash -c 'cat > /etc/rancher/k3s/registries.yaml <<EOF
+mirrors:
+  "192.168.0.250:5000":
+    endpoint:
+      - "http://192.168.0.250:5000"
+EOF'
+
 
 
 #### Test Pull

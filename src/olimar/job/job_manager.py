@@ -45,7 +45,7 @@ class JobManager(threading.Thread):
         self._active_jobs = deque()
         self._complete_jobs = queue.Queue(maxsize=50)
         self.daemon = True
-        self.delete_all_jobs()
+        self.delete_all_pods()
         # self.start()
 
     def get_nodes(self) -> List[Node]:
@@ -59,39 +59,46 @@ class JobManager(threading.Thread):
             for address in item.status.addresses:
                 if address.type == 'InternalIP':
                     ip_address = address.address
+
+            if ip_address == self.master:
+                continue
+
             nodes.append(Node(name=name, ip_address=ip_address))
         return nodes
+
+    def get_node(self, name) -> Node:
+        for node in self.get_nodes():
+            if node.name == name:
+                return node
+        raise KeyError(f'Node {name} not found')
 
     def get_jobs(self) -> List[Job]:
         raise NotImplementedError
 
-    def delete_job(self, job: Job):
-        # Fetch all jobs in the namespace
-        jobs = self.BATCH_API.list_namespaced_job(namespace=self.NAMESPACE)
-        for job in jobs.items:
-            # Delete each job by name
-            self.BATCH_API.delete_namespaced_job(
-                name=job.metadata.name,
-                namespace=self.NAMESPACE,
-                body=client.V1DeleteOptions(
-                    propagation_policy='Foreground'  # Ensures all related pods are also deleted
-                )
+    def delete_pod_by_name(self, pod_name):
+        # Delete the specified pod by name
+        self.CORE_API.delete_namespaced_pod(
+            name=pod_name,
+            namespace=self.NAMESPACE,
+            body=client.V1DeleteOptions(
+                propagation_policy='Foreground'  # Ensures all related resources are also deleted
             )
-            print(f"Deleted job {job.metadata.name}")
+        )
+        print(f"Deleted pod {pod_name}")
 
-    def delete_all_jobs(self):
-        # Fetch all jobs in the namespace
-        jobs = self.BATCH_API.list_namespaced_job(namespace=self.NAMESPACE)
-        for job in jobs.items:
-            # Delete each job by name
-            self.BATCH_API.delete_namespaced_job(
-                name=job.metadata.name,
+    def delete_all_pods(self):
+        # Fetch all pods in the namespace
+        pods = self.CORE_API.list_namespaced_pod(namespace=self.NAMESPACE)
+        for pod in pods.items:
+            # Delete each pod by name
+            self.CORE_API.delete_namespaced_pod(
+                name=pod.metadata.name,
                 namespace=self.NAMESPACE,
                 body=client.V1DeleteOptions(
-                    propagation_policy='Foreground'  # Ensures all related pods are also deleted
+                    propagation_policy='Foreground'  # Ensures all related resources are also deleted
                 )
             )
-            print(f"Deleted job {job.metadata.name}")
+            print(f"Deleted pod {pod.metadata.name}")
 
     def run(self):
         while True:
@@ -176,7 +183,7 @@ class JobManager(threading.Thread):
         """Wait for the Pod to be in the 'Running' state and ready."""
         while True:
             pod = self.CORE_API.read_namespaced_pod(pod_name, self.NAMESPACE)
-            print(pod.status.phase)
+            print(f"{pod_name} is {pod.status.phase}")
             if pod.status.phase == 'Running' and all(
                     container.ready for container in pod.status.container_statuses):
                 print(f"Pod {pod_name} is ready.")

@@ -8,9 +8,7 @@ from olimar.test.test_runner import TestRunnerBase
 
 
 class PyTestTestRunner(TestRunnerBase):
-    def run(self, config: TestRunConfig) -> TestRunResult:
-        node = Node('olimar-node', "192.168.0.173")
-
+    def run(self, node: Node, config: TestRunConfig) -> TestRunResult:
         test_step = JobStep(f'pytest -k {config.name} --junitxml=results.xml')
         result_step = JobStep(f'cat results.xml')
         job_config = JobConfig([test_step, result_step])

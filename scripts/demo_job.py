@@ -8,7 +8,6 @@ from olimar.node.node import Node
 
 def main():
     master = "192.168.0.250"
-    node = Node('olimar-node', "192.168.0.173")
     test_image = Image('192.168.0.250:5000', 'example-env', 'latest')
 
     steps = [
@@ -26,9 +25,10 @@ def main():
     job_config = JobConfig(steps)
 
     manager = JobManager(master)
+    node = manager.get_node('olimar-node2')
     waitable = manager.start_job(node, test_image, job_config)
 
-    result: JobResult = waitable.wait(60)
+    result: JobResult = waitable.wait(300)
 
     for step in result.steps:
         print(f'Command: {step.command}, Results: {step.response}')
