@@ -4,6 +4,7 @@ import threading
 import time
 from collections import deque
 from datetime import datetime
+from typing import List
 
 from kubernetes import client, config
 from kubernetes.stream import stream
@@ -44,7 +45,53 @@ class JobManager(threading.Thread):
         self._active_jobs = deque()
         self._complete_jobs = queue.Queue(maxsize=50)
         self.daemon = True
+        self.delete_all_jobs()
         # self.start()
+
+    def get_nodes(self) -> List[Node]:
+        node_list = self.CORE_API.list_node()
+        nodes = []
+        for item in node_list.items:
+            # Assuming the Node class has the following fields: name, ip_address
+            # Adjust these fields based on your actual Node class definition
+            name = item.metadata.name
+            ip_address = None
+            for address in item.status.addresses:
+                if address.type == 'InternalIP':
+                    ip_address = address.address
+            nodes.append(Node(name=name, ip_address=ip_address))
+        return nodes
+
+    def get_jobs(self) -> List[Job]:
+        raise NotImplementedError
+
+    def delete_job(self, job: Job):
+        # Fetch all jobs in the namespace
+        jobs = self.BATCH_API.list_namespaced_job(namespace=self.NAMESPACE)
+        for job in jobs.items:
+            # Delete each job by name
+            self.BATCH_API.delete_namespaced_job(
+                name=job.metadata.name,
+                namespace=self.NAMESPACE,
+                body=client.V1DeleteOptions(
+                    propagation_policy='Foreground'  # Ensures all related pods are also deleted
+                )
+            )
+            print(f"Deleted job {job.metadata.name}")
+
+    def delete_all_jobs(self):
+        # Fetch all jobs in the namespace
+        jobs = self.BATCH_API.list_namespaced_job(namespace=self.NAMESPACE)
+        for job in jobs.items:
+            # Delete each job by name
+            self.BATCH_API.delete_namespaced_job(
+                name=job.metadata.name,
+                namespace=self.NAMESPACE,
+                body=client.V1DeleteOptions(
+                    propagation_policy='Foreground'  # Ensures all related pods are also deleted
+                )
+            )
+            print(f"Deleted job {job.metadata.name}")
 
     def run(self):
         while True:
@@ -78,7 +125,7 @@ class JobManager(threading.Thread):
         return logs
 
     def _run_job(self, job: Job):
-        job_name = f"job-{str(uuid.uuid4())[:6]}"
+        pod_name = f"pod-{str(uuid.uuid4())[:6]}"
 
         container = client.V1Container(
             name="my-container",
@@ -95,7 +142,7 @@ class JobManager(threading.Thread):
 
         host_artifact_mount = '/mnt/artifacts'
         template = client.V1PodTemplateSpec(
-            metadata=client.V1ObjectMeta(labels={"job-name": job_name}),
+            metadata=client.V1ObjectMeta(labels={"pod-name": pod_name}),
             spec=client.V1PodSpec(
                 containers=[container],
                 restart_policy="Never",
@@ -112,33 +159,34 @@ class JobManager(threading.Thread):
             )
         )
 
-        job_spec = client.V1JobSpec(
-            template=template,
-            backoff_limit=4
+        # Define the pod
+        kubernetes_pod = client.V1Pod(
+            api_version="v1",
+            kind="Pod",
+            metadata=client.V1ObjectMeta(name=pod_name),
+            spec=template.spec  # Use the spec from the template directly
         )
 
-        # Define the job
-        kubernetes_job = client.V1Job(
-            api_version="batch/v1",
-            kind="Job",
-            metadata=client.V1ObjectMeta(name=job_name),
-            spec=job_spec
-        )
-
-        self.BATCH_API.create_namespaced_job(
+        # Create the pod
+        self.CORE_API.create_namespaced_pod(
             namespace=self.NAMESPACE,
-            body=kubernetes_job
+            body=kubernetes_pod
         )
 
-        pod_name = self._get_pod_name_by_job(job_name)
-
-        time.sleep(3)
+        """Wait for the Pod to be in the 'Running' state and ready."""
+        while True:
+            pod = self.CORE_API.read_namespaced_pod(pod_name, self.NAMESPACE)
+            print(pod.status.phase)
+            if pod.status.phase == 'Running' and all(
+                    container.ready for container in pod.status.container_statuses):
+                print(f"Pod {pod_name} is ready.")
+                break
+            time.sleep(1)  # Wait before rechecking
 
         # Execute each command sequentially
-        logs = []
         for step in job.config.steps:
             command = ['sh', '-c', step.command]
-            print(f"Executing command: {command}, Pod Name: {pod_name}")
+            print(f"Executing command: {command}")
             resp = stream(
                 self.CORE_API.connect_get_namespaced_pod_exec,
                 pod_name,
@@ -152,16 +200,17 @@ class JobManager(threading.Thread):
             )
             step.response = resp
             step.is_complete = True
-            time.sleep(1)
+
+            pod = self.CORE_API.read_namespaced_pod(pod_name, self.NAMESPACE)
+            print(pod.status.phase)
+            # time.sleep(1)
 
         # Delete the job and associated resources
-        print(f"Deleting job: {job_name}")
-        self.BATCH_API.delete_namespaced_job(
-            name=job_name,
+        print(f"Deleting pod: {pod_name}")
+        self.CORE_API.delete_namespaced_pod(
+            name=pod_name,
             namespace=self.NAMESPACE,
-            body=client.V1DeleteOptions(
-                propagation_policy='Foreground'  # Ensures all pods and resources are cleaned up
-            )
+            body=client.V1DeleteOptions()  # Optional: You can provide additional delete options
         )
         job.is_complete = True
 
@@ -171,9 +220,8 @@ class JobManager(threading.Thread):
         #     print(f"Retrieving: {path}")
         #     buffer = file_transfer.get(path)
         #     artifacts.append(buffer)
-        #
 
-        job_result = JobResult(job_name, job.config.steps, [])
+        job_result = JobResult(pod_name, job.config.steps, [])
         job.waitable.notify(job_result)
 
         return
@@ -194,7 +242,10 @@ class JobManager(threading.Thread):
             namespace=self.NAMESPACE,
             label_selector=f"job-name={job_name}"
         ).items
-        return pods[0].metadata.name if pods else None
+        if len(pods) > 0:
+            raise KeyError(f"Could not find pod for job name: {job_name}")
+
+        return pods[0].metadata.name
 
     def _extract_file_from_pod(self, pod_name: str, src_path: str, dest_path: str):
         exec_command = ['tar', 'cf', '-', src_path]
