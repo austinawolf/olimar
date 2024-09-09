@@ -122,7 +122,7 @@ class Job:
     def start_step(self, step: JobStep):
         try:
             command = ['sh', '-c', step.command]
-            self.logger.info(f"Executing command: {command}")
+            self.logger.info(f"Executing on {self.node.name}: {command}")
 
             # Stream the command output in real-time
             resp = stream(
@@ -152,6 +152,7 @@ class Job:
                 if resp.peek_stderr():
                     error_chunk = resp.read_stderr()
                     step.response += error_chunk
+                time.sleep(0.5)
 
             resp.close()
             step.is_complete = True
