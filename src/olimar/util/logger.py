@@ -24,6 +24,11 @@ class Logger(logging.Logger):
             _logger = cls()
         return _logger
 
+    @classmethod
+    def configure(cls, console_level: Level = Level.INFO):
+        logger = cls.get()
+        logger.setup_console(console_level)
+
     def __init__(self):
         super().__init__("fwutil")
         self._console_logger = None

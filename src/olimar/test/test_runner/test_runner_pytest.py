@@ -13,7 +13,7 @@ class PyTestTestRunner(TestRunnerBase):
         result_step = JobStep(f'cat results.xml')
         job_config = JobConfig([test_step, result_step])
 
-        waitable = self.job_manager.start_job(node, config.image, job_config)
+        waitable = self.job_manager.create_job(node, config.image, job_config)
         result: JobResult = waitable.wait(config.timeout)
 
         run_result = TestRunResult.from_junit_string(config, result_step.response)

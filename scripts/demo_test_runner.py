@@ -1,18 +1,18 @@
 import threading
 import time
-
 from tabulate import tabulate
-
 from olimar.image.image import Image
 from olimar.job.job_manager import JobManager
-from olimar.node.node import Node
-from olimar.test.test_result import TestResult, TestRunResult
 from olimar.test.test_run_config import TestRunConfig
 from olimar.test.test_runner import TestRunnerBase
 from olimar.test.test_runner.test_runner_pytest import PyTestTestRunner
+from olimar.util.logger import Logger
 
 
 def main():
+    logger = Logger.get()
+    logger.setup_console(Logger.Level.DEBUG)
+
     # Setup Test Config
     image = Image('192.168.0.250:5000', 'example-env', 'latest')
 
@@ -41,9 +41,11 @@ def main():
     thread2 = threading.Thread(target=run, args=(node2, test2))
 
     thread1.start()
-    thread1.join()
     thread2.start()
+    thread1.join()
     thread2.join()
+
+    job_manager.delete_all_pods()
 
     headers = ['Name', 'Status', 'Time']
     rows = []
@@ -53,6 +55,7 @@ def main():
                 rows.append([test.name, test.status, test.time])
 
     print(tabulate(rows, headers=headers, tablefmt="plain"))
+
 
 
 main()

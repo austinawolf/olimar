@@ -23,15 +23,18 @@ def main():
     job_config = JobConfig(steps)
 
     manager = JobManager(master)
-    node = manager.get_node('olimar-node')
-    node2 = manager.get_node('olimar-node2')
+    nodes = manager.get_nodes()
 
-    waitable = manager.create_job(node, test_image, job_config)
-    waitable = manager.create_job(node, test_image, job_config)
+    waitable = manager.create_job(nodes[0], test_image, job_config)
+    waitable1 = manager.create_job(nodes[1], test_image, job_config)
 
     result: JobResult = waitable.wait(300)
+    result2: JobResult = waitable1.wait(300)
 
     for step in result.steps:
+        print(f'Command: {step.command}, Results: {step.response}')
+
+    for step in result2.steps:
         print(f'Command: {step.command}, Results: {step.response}')
 
 
