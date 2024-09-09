@@ -120,32 +120,46 @@ class Job:
             return step
 
     def start_step(self, step: JobStep):
-        def execute():
-            try:
-                command = ['sh', '-c', step.command]
-                self.logger.info(f"Executing command: {command}")
-                resp = stream(
-                    self.CORE_API.connect_get_namespaced_pod_exec,
-                    self.name,
-                    self.NAMESPACE,
-                    container='my-container',
-                    command=command,
-                    stderr=True,
-                    stdin=False,
-                    stdout=True,
-                    tty=False
-                )
-                step.response = resp
-                step.is_complete = True
-                time.sleep(1)
-            except Exception as e:
-                self.logger.error(str(e))
-                self.status = Job.Status.ERROR
-            else:
-                self.status = Job.Status.IDLE
+        try:
+            command = ['sh', '-c', step.command]
+            self.logger.info(f"Executing command: {command}")
 
+            # Stream the command output in real-time
+            resp = stream(
+                self.CORE_API.connect_get_namespaced_pod_exec,
+                self.name,
+                self.NAMESPACE,
+                container='my-container',
+                command=command,
+                stderr=True,
+                stdin=False,
+                stdout=True,
+                tty=False,
+                _preload_content=False  # Disable preloading to stream the output
+            )
+        except Exception as e:
+            self.logger.error(f"Error executing command: {str(e)}")
+            self.status = Job.Status.ERROR
+            return
+
+        def listener():
+            nonlocal resp
+            while resp.is_open():
+                resp.update(timeout=1)
+                if resp.peek_stdout():
+                    output_chunk = resp.read_stdout()
+                    step.response += output_chunk
+                if resp.peek_stderr():
+                    error_chunk = resp.read_stderr()
+                    step.response += error_chunk
+
+            resp.close()
+            step.is_complete = True
+            self.status = Job.Status.IDLE
+
+        # Set status to EXECUTING and start the command execution in a separate thread
         self.status = Job.Status.EXECUTING
-        thread = threading.Thread(target=execute, args=())
+        thread = threading.Thread(target=listener)
         thread.start()
 
     def cleanup(self):

@@ -54,8 +54,7 @@ def main():
             for test in suite.results:
                 rows.append([test.name, test.status, test.time])
 
-    print(tabulate(rows, headers=headers, tablefmt="plain"))
-
+    print(tabulate(rows, headers=headers, tablefmt="pretty", stralign="left"))
 
 
 main()
