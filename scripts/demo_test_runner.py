@@ -20,12 +20,13 @@ def main():
     master = "192.168.0.250"
     job_manager = JobManager(master)
     nodes = job_manager.get_nodes()
-    node1 = nodes[0]
-    node2 = nodes[1]
+    olimar_node = nodes['olimar-node']
+    olimar_node2 = nodes['olimar-node2']
 
     # Setup tests
-    test1 = TestRunConfig('test_calculator', image, timeout=60)
+    test1 = TestRunConfig('test_echo_serial', image, timeout=60)
     test2 = TestRunConfig('test_slow_calculator', image, timeout=60)
+    test3 = TestRunConfig('test_calculator', image, timeout=60)
 
     # Create Test Runner
     test_runner: TestRunnerBase = PyTestTestRunner(job_manager)
@@ -37,13 +38,16 @@ def main():
         result = test_runner.run(node, test)
         run_results.append(result)
 
-    thread1 = threading.Thread(target=run, args=(node1, test1))
-    thread2 = threading.Thread(target=run, args=(node2, test2))
+    thread1 = threading.Thread(target=run, args=(olimar_node, test1))
+    thread2 = threading.Thread(target=run, args=(olimar_node2, test2))
+    thread3 = threading.Thread(target=run, args=(olimar_node2, test3))
 
     thread1.start()
     thread2.start()
-    thread1.join()
     thread2.join()
+    thread3.start()
+    thread1.join()
+    thread3.join()
 
     job_manager.delete_all_pods()
 

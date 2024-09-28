@@ -9,7 +9,7 @@ from olimar.test.test_runner import TestRunnerBase
 
 class PyTestTestRunner(TestRunnerBase):
     def run(self, node: Node, config: TestRunConfig) -> TestRunResult:
-        test_step = JobStep(f'pytest -k {config.name} --junitxml=results.xml')
+        test_step = JobStep(f'pytest -k {config.name} --capture=tee-sys -o junit_logging=out-err --junitxml=results.xml')
         result_step = JobStep(f'cat results.xml')
         job_config = JobConfig([test_step, result_step])
 

@@ -62,9 +62,9 @@ class JobManager(threading.Thread):
                     pass
                 time.sleep(0.5)
 
-    def get_nodes(self) -> List[Node]:
+    def get_nodes(self) -> dict[str, Node]:
         node_list = self.CORE_API.list_node()
-        nodes = []
+        nodes = {}
         for item in node_list.items:
             # Assuming the Node class has the following fields: name, ip_address
             # Adjust these fields based on your actual Node class definition
@@ -77,7 +77,7 @@ class JobManager(threading.Thread):
             if ip_address == self.master:
                 continue
 
-            nodes.append(Node(name=name, ip_address=ip_address))
+            nodes[name] = (Node(name=name, ip_address=ip_address))
         return nodes
 
     def get_node(self, name) -> Node:

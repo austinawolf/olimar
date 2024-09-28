@@ -64,8 +64,15 @@ class Job:
                 client.V1VolumeMount(
                     name="my-volume",
                     mount_path="/artifacts"
-                )
-            ]
+                ),
+                client.V1VolumeMount(
+                    name="dev-volume",  # Mount the /dev directory to access USB devices
+                    mount_path="/dev"
+                ),
+            ],
+            security_context=client.V1SecurityContext(
+                privileged=True  # Provide privileged access to the container
+            ),
         )
 
         host_artifact_mount = '/mnt/artifacts'
@@ -82,6 +89,13 @@ class Job:
                             path=host_artifact_mount,
                             type='DirectoryOrCreate'
                         ),
+                    ),
+                    client.V1Volume(
+                        name="dev-volume",
+                        host_path=client.V1HostPathVolumeSource(
+                            path="/dev",  # Mount the host's /dev directory
+                            type=None  # Optional: specify 'Directory' or other types as needed
+                        )
                     )
                 ],
             )

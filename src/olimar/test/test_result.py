@@ -15,12 +15,14 @@ class TestStatus(enum.Enum):
 
 
 class TestResult:
-    def __init__(self, name, status: TestStatus, time, message, text, type_):
+    def __init__(self, name, status: TestStatus, time, message, text, sout, serr, type_):
         self.name = name
         self.status = status
         self.time = time
         self.message = message
         self.text = text
+        self.sout = sout
+        self.serr = serr
         self.type = type_
 
     def __str__(self):
@@ -50,8 +52,8 @@ class TestRunResult:
                 time = test_case.time
                 sout = test_case.system_out
                 serr = test_case.system_err
-                message = ""
                 text = ""
+                message = ""
                 status = TestStatus.SUCCESS
                 type_ = None
 
@@ -66,7 +68,7 @@ class TestRunResult:
                         text = test_case.result[0].text
                         type_ = test_case.result[0].type
 
-                test = TestResult(name, status, time, message, text, type_)
+                test = TestResult(name, status, time, message, text, sout, serr, type_)
                 tests.append(test)
 
             suite_result = TestSuiteResult(suite.name, tests, suite.timestamp)
